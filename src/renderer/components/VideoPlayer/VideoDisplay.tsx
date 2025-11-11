@@ -1,6 +1,7 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { useToast } from '../../hooks/useToast';
+import LoadingSpinner from '../LoadingSpinner';
 import './VideoDisplay.css';
 
 const VideoDisplay: React.FC = () => {
@@ -9,10 +10,12 @@ const VideoDisplay: React.FC = () => {
   const { showError } = useToast();
   const { currentFile } = state.playlist;
   const { isPlaying, volume, currentTime } = state.player;
+  const [isLoading, setIsLoading] = useState(false);
 
   // 현재 파일 변경 시 src 업데이트
   useEffect(() => {
     if (currentFile && videoRef.current) {
+      setIsLoading(true);
       // file:// 프로토콜로 로컬 파일 로드
       videoRef.current.src = `file://${currentFile.path}`;
       videoRef.current.load();
@@ -69,6 +72,26 @@ const VideoDisplay: React.FC = () => {
     });
   };
 
+  // 비디오 데이터 로드 완료
+  const handleCanPlay = () => {
+    setIsLoading(false);
+  };
+
+  // 비디오 로딩 시작
+  const handleLoadStart = () => {
+    setIsLoading(true);
+  };
+
+  // 비디오 대기 중
+  const handleWaiting = () => {
+    setIsLoading(true);
+  };
+
+  // 비디오 재생 중
+  const handlePlaying = () => {
+    setIsLoading(false);
+  };
+
   // 에러 처리 (MediaError 타입별 처리)
   const handleError = () => {
     if (videoRef.current?.error) {
@@ -122,7 +145,16 @@ const VideoDisplay: React.FC = () => {
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
         onError={handleError}
+        onCanPlay={handleCanPlay}
+        onLoadStart={handleLoadStart}
+        onWaiting={handleWaiting}
+        onPlaying={handlePlaying}
       />
+      {isLoading && (
+        <div className="video-display__loading">
+          <LoadingSpinner size="large" message="비디오 로딩 중..." />
+        </div>
+      )}
     </div>
   );
 };

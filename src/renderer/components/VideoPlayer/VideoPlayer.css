@@ -4,8 +4,27 @@
   position: relative;
   background-color: #000;
   overflow: hidden;
+  animation: video-player-fade-in 0.3s ease;
+}
+
+@keyframes video-player-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .video-player:hover .video-controls {
   opacity: 1;
+}
+
+/* 마우스 커서 숨김 (비디오 재생 중) */
+.video-player.playing:not(:hover) {
+  cursor: none;
+}
+
+.video-player.playing:not(:hover) .video-element {
+  cursor: none;
 }

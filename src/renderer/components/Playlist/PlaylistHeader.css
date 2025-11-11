@@ -3,8 +3,9 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
-  background-color: #2a2a2a;
+  background: linear-gradient(180deg, #2a2a2a 0%, #252525 100%);
   border-bottom: 1px solid #3a3a3a;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .playlist-title {
@@ -12,9 +13,20 @@
   font-size: 16px;
   font-weight: 600;
   color: #ffffff;
+  letter-spacing: 0.3px;
 }
 
 .playlist-count {
-  font-size: 14px;
+  font-size: 13px;
   color: #888888;
+  background-color: #3a3a3a;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.playlist-count:hover {
+  background-color: #4a4a4a;
+  color: #aaa;
 }

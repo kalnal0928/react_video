@@ -17,7 +17,13 @@
   overflow: hidden;
 }
 
-/* 반응형 레이아웃 - 작은 화면에서는 세로 배치 */
+/* 반응형 레이아웃 */
+@media (max-width: 1024px) {
+  .main-layout__playlist-section {
+    width: 250px;
+  }
+}
+
 @media (max-width: 768px) {
   .main-layout {
     flex-direction: column;
@@ -28,5 +34,45 @@
     height: 200px;
     border-left: none;
     border-top: 1px solid #444;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-layout__playlist-section {
+    height: 150px;
+  }
+}
+
+/* 큰 화면에서 더 넓은 재생 목록 */
+@media (min-width: 1440px) {
+  .main-layout__playlist-section {
+    width: 350px;
+  }
+}
+
+/* 깊이감을 위한 그림자 효과 */
+.main-layout__playlist-section {
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.3);
+  z-index: 1;
+}
+
+/* 비디오 섹션 애니메이션 */
+.main-layout__video-section {
+  animation: video-section-fade-in 0.4s ease;
+}
+
+@keyframes video-section-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 모바일에서 그림자 조정 */
+@media (max-width: 768px) {
+  .main-layout__playlist-section {
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
   }
 }

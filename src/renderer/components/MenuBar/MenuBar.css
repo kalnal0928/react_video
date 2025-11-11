@@ -2,8 +2,23 @@
   display: flex;
   gap: 8px;
   padding: 12px 16px;
-  background-color: #2c2c2c;
+  background: linear-gradient(180deg, #2c2c2c 0%, #262626 100%);
   border-bottom: 1px solid #444;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  user-select: none;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 480px) {
+  .menu-bar {
+    padding: 10px 12px;
+    gap: 6px;
+  }
+
+  .menu-bar__button {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
 }
 
 .menu-bar__button {
@@ -11,16 +26,47 @@
   background-color: #3a3a3a;
   color: #fff;
   border: 1px solid #555;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
-  transition: background-color 0.2s;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.menu-bar__button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
 }
 
 .menu-bar__button:hover {
   background-color: #4a4a4a;
+  border-color: #666;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.menu-bar__button:hover::before {
+  width: 200px;
+  height: 200px;
 }
 
 .menu-bar__button:active {
   background-color: #2a2a2a;
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.menu-bar__button:focus-visible {
+  outline: 2px solid rgba(33, 150, 243, 0.8);
+  outline-offset: 2px;
 }
