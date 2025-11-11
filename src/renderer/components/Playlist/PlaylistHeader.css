@@ -1,0 +1,20 @@
+.playlist-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: #2a2a2a;
+  border-bottom: 1px solid #3a3a3a;
+}
+
+.playlist-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.playlist-count {
+  font-size: 14px;
+  color: #888888;
+}

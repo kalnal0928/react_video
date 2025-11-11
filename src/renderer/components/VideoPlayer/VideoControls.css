@@ -1,0 +1,149 @@
+.video-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  padding: 20px 16px 16px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.video-controls:hover,
+.video-controls:focus-within {
+  opacity: 1;
+}
+
+/* 프로그레스 바 */
+.progress-bar-container {
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.progress-bar-background {
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: #2196f3;
+  transition: width 0.1s linear;
+}
+
+.progress-bar-container:hover .progress-bar-background {
+  height: 6px;
+}
+
+/* 컨트롤 버튼 행 */
+.controls-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: white;
+}
+
+.control-button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.control-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.control-button:active {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.play-pause-button {
+  padding: 8px 12px;
+}
+
+/* 시간 표시 */
+.time-display {
+  font-size: 14px;
+  font-family: monospace;
+  user-select: none;
+}
+
+.time-separator {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* 오른쪽 컨트롤 */
+.controls-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 볼륨 컨트롤 */
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.volume-slider {
+  width: 80px;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.volume-slider::-moz-range-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 600px) {
+  .volume-control {
+    display: none;
+  }
+  
+  .time-display {
+    font-size: 12px;
+  }
+}
