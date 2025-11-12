@@ -16,21 +16,42 @@ const VideoDisplay: React.FC = () => {
   useEffect(() => {
     if (currentFile && videoRef.current) {
       setIsLoading(true);
-      // file:// 프로토콜로 로컬 파일 로드
-      videoRef.current.src = `file://${currentFile.path}`;
-      videoRef.current.load();
+      const video = videoRef.current;
+      
+      // 이전 비디오 정리
+      video.pause();
+      video.currentTime = 0;
+      
+      // Windows 경로를 URL 형식으로 변환 (백슬래시 -> 슬래시)
+      const normalizedPath = currentFile.path.replace(/\\/g, '/');
+      // file:/// 프로토콜로 로컬 파일 로드 (슬래시 3개)
+      video.src = `file:///${normalizedPath}`;
+      video.load();
+      
+      // 로드 완료 후 자동 재생
+      if (isPlaying) {
+        video.play().catch((error) => {
+          console.error('자동 재생 실패:', error);
+        });
+      }
     }
   }, [currentFile]);
 
   // 재생/일시정지 상태 동기화
   useEffect(() => {
-    if (videoRef.current) {
+    if (videoRef.current && videoRef.current.src) {
       if (isPlaying) {
-        videoRef.current.play().catch((error) => {
-          console.error('재생 실패:', error);
-          showError('비디오 재생에 실패했습니다.');
-          dispatch({ type: 'PAUSE' });
-        });
+        const playPromise = videoRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.catch((error) => {
+            console.error('재생 실패:', error);
+            // NotAllowedError는 사용자 상호작용 없이 재생 시도할 때 발생 (무시 가능)
+            if (error.name !== 'NotAllowedError') {
+              showError('비디오 재생에 실패했습니다.');
+              dispatch({ type: 'PAUSE' });
+            }
+          });
+        }
       } else {
         videoRef.current.pause();
       }

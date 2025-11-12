@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, dialog } from 'electron';
+import { app, BrowserWindow, ipcMain, dialog, Menu } from 'electron';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import * as fs from 'fs/promises';
@@ -17,7 +17,9 @@ function createWindow() {
     backgroundColor: '#000000',
     show: false,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: process.env.VITE_DEV_SERVER_URL 
+        ? path.join(process.cwd(), 'src/main/preload.cjs')
+        : path.join(__dirname, 'preload.cjs'),
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: true
@@ -59,6 +61,9 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+  // Remove the default menu
+  Menu.setApplicationMenu(null);
+  
   createWindow();
 
   app.on('activate', () => {

@@ -1,4 +1,8 @@
-import { AppState, AppAction } from '../../types';
+import { AppState, AppAction, Settings } from '../../types';
+
+export const DEFAULT_SETTINGS: Settings = {
+  seekInterval: 5,
+};
 
 export const appReducer = (state: AppState, action: AppAction): AppState => {
   switch (action.type) {
@@ -13,6 +17,52 @@ export const appReducer = (state: AppState, action: AppAction): AppState => {
         player: {
           ...state.player,
           isPlaying: action.payload.length > 0,
+          currentTime: 0,
+          duration: 0,
+        },
+      };
+
+    case 'ADD_TO_PLAYLIST':
+      // Check if file already exists in playlist
+      const fileExists = state.playlist.files.some(
+        (file) => file.path === action.payload.path
+      );
+      
+      if (fileExists) {
+        // If file exists, just switch to it
+        const existingIndex = state.playlist.files.findIndex(
+          (file) => file.path === action.payload.path
+        );
+        return {
+          ...state,
+          playlist: {
+            ...state.playlist,
+            currentIndex: existingIndex,
+            currentFile: state.playlist.files[existingIndex],
+          },
+          player: {
+            ...state.player,
+            isPlaying: true,
+            currentTime: 0,
+            duration: 0,
+          },
+        };
+      }
+      
+      // Add new file to playlist
+      const updatedFiles = [...state.playlist.files, action.payload];
+      const newFileIndex = updatedFiles.length - 1;
+      
+      return {
+        ...state,
+        playlist: {
+          files: updatedFiles,
+          currentIndex: newFileIndex,
+          currentFile: action.payload,
+        },
+        player: {
+          ...state.player,
+          isPlaying: true,
           currentTime: 0,
           duration: 0,
         },
@@ -155,6 +205,44 @@ export const appReducer = (state: AppState, action: AppAction): AppState => {
       return {
         ...state,
         toasts: state.toasts.filter((toast) => toast.id !== action.payload),
+      };
+
+    case 'SET_SETTINGS':
+      return {
+        ...state,
+        settings: action.payload,
+      };
+
+    case 'UPDATE_SETTING':
+      const { key, value } = action.payload;
+      
+      // Validate seekInterval range (1-60 seconds)
+      if (key === 'seekInterval') {
+        const numValue = Number(value);
+        if (isNaN(numValue) || numValue < 1 || numValue > 60) {
+          return state; // Invalid value, don't update
+        }
+        return {
+          ...state,
+          settings: {
+            ...state.settings,
+            [key]: numValue,
+          },
+        };
+      }
+      
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          [key]: value,
+        },
+      };
+
+    case 'RESET_SETTINGS':
+      return {
+        ...state,
+        settings: { ...DEFAULT_SETTINGS },
       };
 
     default:

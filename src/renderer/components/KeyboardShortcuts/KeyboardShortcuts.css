@@ -1,0 +1,193 @@
+/* Modal Backdrop */
+.shortcuts-modal__backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal Container */
+.shortcuts-modal {
+  background: linear-gradient(180deg, #2c2c2c 0%, #262626 100%);
+  border: 1px solid #444;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Modal Header */
+.shortcuts-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #444;
+  background-color: #2a2a2a;
+}
+
+.shortcuts-modal__title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.shortcuts-modal__close {
+  background: none;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.shortcuts-modal__close svg {
+  width: 24px;
+  height: 24px;
+}
+
+.shortcuts-modal__close:hover {
+  background-color: #3a3a3a;
+  color: #fff;
+}
+
+.shortcuts-modal__close:active {
+  background-color: #2a2a2a;
+}
+
+.shortcuts-modal__close:focus-visible {
+  outline: 2px solid rgba(33, 150, 243, 0.8);
+  outline-offset: 2px;
+}
+
+/* Modal Content */
+.shortcuts-modal__content {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.shortcuts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.shortcut-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.shortcut-item:hover {
+  background-color: #222;
+}
+
+.shortcut-item__key {
+  min-width: 140px;
+  padding: 8px 12px;
+  background: linear-gradient(180deg, #3a3a3a 0%, #2c2c2c 100%);
+  border: 1px solid #555;
+  border-radius: 6px;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.shortcut-item__description {
+  flex: 1;
+  font-size: 14px;
+  color: #ccc;
+}
+
+/* Modal Footer */
+.shortcuts-modal__footer {
+  padding: 16px 24px;
+  border-top: 1px solid #444;
+  background-color: #2a2a2a;
+}
+
+.shortcuts-modal__note {
+  margin: 0;
+  font-size: 12px;
+  color: #999;
+  text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .shortcuts-modal {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .shortcuts-modal__header {
+    padding: 16px 20px;
+  }
+
+  .shortcuts-modal__title {
+    font-size: 18px;
+  }
+
+  .shortcuts-modal__content {
+    padding: 20px;
+  }
+
+  .shortcut-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .shortcut-item__key {
+    min-width: 100%;
+  }
+
+  .shortcuts-modal__footer {
+    padding: 12px 20px;
+  }
+}

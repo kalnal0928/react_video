@@ -9,6 +9,7 @@ const VideoPlayer: React.FC = () => {
   const { state, dispatch } = useAppContext();
   const { showError } = useToast();
   const { isPlaying, currentTime } = state.player;
+  const { seekInterval } = state.settings;
 
   // 키보드 단축키 구현
   useEffect(() => {
@@ -33,20 +34,21 @@ const VideoPlayer: React.FC = () => {
           break;
 
         case 'ArrowRight':
-          // 오른쪽 화살표로 5초 앞으로
+          // 오른쪽 화살표로 설정된 간격만큼 앞으로
           e.preventDefault();
-          dispatch({ type: 'SET_TIME', payload: currentTime + 5 });
+          dispatch({ type: 'SET_TIME', payload: currentTime + seekInterval });
           break;
 
         case 'ArrowLeft':
-          // 왼쪽 화살표로 5초 뒤로
+          // 왼쪽 화살표로 설정된 간격만큼 뒤로
           e.preventDefault();
-          dispatch({ type: 'SET_TIME', payload: Math.max(0, currentTime - 5) });
+          dispatch({ type: 'SET_TIME', payload: Math.max(0, currentTime - seekInterval) });
           break;
 
         case 'f':
         case 'F':
-          // f 키로 전체화면 토글
+        case 'Enter':
+          // f 키 또는 엔터 키로 전체화면 토글
           e.preventDefault();
           window.electronAPI.toggleFullscreen()
             .then(() => {
@@ -58,6 +60,21 @@ const VideoPlayer: React.FC = () => {
             });
           break;
 
+        case 'Escape':
+          // ESC 키로 전체화면 해제
+          e.preventDefault();
+          if (state.player.isFullscreen) {
+            window.electronAPI.toggleFullscreen()
+              .then(() => {
+                dispatch({ type: 'TOGGLE_FULLSCREEN' });
+              })
+              .catch((error) => {
+                console.error('전체화면 해제 실패:', error);
+                showError('전체화면 해제에 실패했습니다.');
+              });
+          }
+          break;
+
         default:
           break;
       }
@@ -65,7 +82,7 @@ const VideoPlayer: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [isPlaying, currentTime, dispatch, showError]);
+  }, [isPlaying, currentTime, seekInterval, state.player.isFullscreen, dispatch, showError]);
 
   return (
     <div className="video-player">

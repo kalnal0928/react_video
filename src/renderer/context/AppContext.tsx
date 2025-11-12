@@ -1,12 +1,31 @@
 import React, { createContext, useReducer, useContext, ReactNode, useEffect } from 'react';
-import { AppState, AppAction } from '../../types';
-import { appReducer } from './appReducer';
+import { AppState, AppAction, Settings } from '../../types';
+import { appReducer, DEFAULT_SETTINGS } from './appReducer';
 
 const VOLUME_STORAGE_KEY = 'videoPlayer_volume';
+const SETTINGS_STORAGE_KEY = 'videoPlayer_settings';
 
 const getInitialVolume = (): number => {
   const stored = localStorage.getItem(VOLUME_STORAGE_KEY);
   return stored ? parseFloat(stored) : 0.7;
+};
+
+const getInitialSettings = (): Settings => {
+  try {
+    const stored = localStorage.getItem(SETTINGS_STORAGE_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      // Validate the loaded settings
+      if (typeof parsed.seekInterval === 'number' && 
+          parsed.seekInterval >= 1 && 
+          parsed.seekInterval <= 60) {
+        return parsed;
+      }
+    }
+  } catch (error) {
+    console.error('Failed to load settings from localStorage:', error);
+  }
+  return { ...DEFAULT_SETTINGS };
 };
 
 const initialState: AppState = {
@@ -23,6 +42,7 @@ const initialState: AppState = {
     isFullscreen: false,
   },
   toasts: [],
+  settings: getInitialSettings(),
 };
 
 interface AppContextType {
@@ -43,6 +63,15 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   useEffect(() => {
     localStorage.setItem(VOLUME_STORAGE_KEY, state.player.volume.toString());
   }, [state.player.volume]);
+
+  // 설정 변경 시 로컬 스토리지에 저장
+  useEffect(() => {
+    try {
+      localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(state.settings));
+    } catch (error) {
+      console.error('Failed to save settings to localStorage:', error);
+    }
+  }, [state.settings]);
 
   return (
     <AppContext.Provider value={{ state, dispatch }}>

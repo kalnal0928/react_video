@@ -1,11 +1,22 @@
 .menu-bar {
   display: flex;
-  gap: 8px;
+  justify-content: space-between;
+  align-items: center;
   padding: 12px 16px;
   background: linear-gradient(180deg, #2c2c2c 0%, #262626 100%);
   border-bottom: 1px solid #444;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   user-select: none;
+}
+
+.menu-bar__left {
+  display: flex;
+  gap: 8px;
+}
+
+.menu-bar__right {
+  display: flex;
+  gap: 8px;
 }
 
 /* 반응형 디자인 */
@@ -69,4 +80,22 @@
 .menu-bar__button:focus-visible {
   outline: 2px solid rgba(33, 150, 243, 0.8);
   outline-offset: 2px;
+}
+
+.menu-bar__button--icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  min-width: 40px;
+  min-height: 40px;
+}
+
+.menu-bar__button--icon svg {
+  color: #aaa;
+  transition: color 0.2s ease;
+}
+
+.menu-bar__button--icon:hover svg {
+  color: #fff;
 }

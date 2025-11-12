@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './Toast.css';
 
 export type ToastType = 'info' | 'success' | 'error' | 'warning';
@@ -11,16 +11,35 @@ interface ToastProps {
 }
 
 const Toast: React.FC<ToastProps> = ({ message, type, onClose, duration = 3000 }) => {
+  const [isExiting, setIsExiting] = useState(false);
+  const onCloseRef = useRef(onClose);
+
+  // Keep the ref updated
   useEffect(() => {
-    const timer = setTimeout(() => {
-      onClose();
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
+  useEffect(() => {
+    if (duration <= 0) return;
+    
+    // Start exit animation before removing
+    const exitTimer = setTimeout(() => {
+      setIsExiting(true);
+    }, duration - 300); // Start exit animation 300ms before removal
+
+    // Remove toast after animation completes
+    const removeTimer = setTimeout(() => {
+      onCloseRef.current();
     }, duration);
 
-    return () => clearTimeout(timer);
-  }, [duration, onClose]);
+    return () => {
+      clearTimeout(exitTimer);
+      clearTimeout(removeTimer);
+    };
+  }, [duration]);
 
   return (
-    <div className={`toast toast--${type}`} role="alert">
+    <div className={`toast toast--${type} ${isExiting ? 'toast--exiting' : ''}`} role="alert">
       <div className="toast__icon">
         {type === 'error' && (
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">

@@ -21,17 +21,7 @@ export default defineConfig({
           }
         }
       },
-      {
-        entry: 'src/main/preload.ts',
-        onstart(options) {
-          options.reload();
-        },
-        vite: {
-          build: {
-            outDir: 'dist-electron'
-          }
-        }
-      }
+
     ]),
     renderer()
   ],

@@ -1,0 +1,39 @@
+/* Settings Button - inherits from menu-bar__button */
+.settings-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  min-width: 40px;
+  min-height: 40px;
+}
+
+.settings-button__icon {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease;
+}
+
+/* Hover state - rotate gear icon */
+.settings-button:hover .settings-button__icon {
+  transform: rotate(45deg);
+}
+
+/* Active state - rotate gear icon further */
+.settings-button:active .settings-button__icon {
+  transform: rotate(90deg);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .settings-button {
+    padding: 6px;
+    min-width: 36px;
+    min-height: 36px;
+  }
+
+  .settings-button__icon {
+    width: 18px;
+    height: 18px;
+  }
+}
