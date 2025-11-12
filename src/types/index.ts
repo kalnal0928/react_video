@@ -27,6 +27,7 @@ export interface ToastMessage {
 
 export interface Settings {
   seekInterval: number;
+  volumeStep: number;
 }
 
 export interface AppState {

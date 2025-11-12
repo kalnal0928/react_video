@@ -5,6 +5,11 @@
   position: relative;
 }
 
+/* 전체화면 모드 */
+.main-layout--fullscreen {
+  height: 100vh; /* 전체화면일 때는 MenuBar 없으므로 100vh */
+}
+
 .main-layout__video-section {
   flex: 1;
   display: flex;

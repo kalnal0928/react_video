@@ -10,7 +10,20 @@ const MainLayout: React.FC = () => {
   const [isPlaylistVisible, setIsPlaylistVisible] = useState(true);
   const [playlistWidth, setPlaylistWidth] = useState(300);
   const [isResizing, setIsResizing] = useState(false);
+  const [wasPlaylistVisibleBeforeFullscreen, setWasPlaylistVisibleBeforeFullscreen] = useState(true);
   const layoutRef = useRef<HTMLDivElement>(null);
+
+  // 전체화면 상태 변경 감지
+  useEffect(() => {
+    if (state.player.isFullscreen) {
+      // 전체화면 진입 시: 현재 상태 저장하고 재생 목록 숨김
+      setWasPlaylistVisibleBeforeFullscreen(isPlaylistVisible);
+      setIsPlaylistVisible(false);
+    } else {
+      // 전체화면 해제 시: 이전 상태로 복원
+      setIsPlaylistVisible(wasPlaylistVisibleBeforeFullscreen);
+    }
+  }, [state.player.isFullscreen]);
 
   const handleTogglePlaylist = () => {
     setIsPlaylistVisible(!isPlaylistVisible);
@@ -53,11 +66,14 @@ const MainLayout: React.FC = () => {
   }, [isResizing]);
 
   return (
-    <div className="main-layout" ref={layoutRef}>
+    <div 
+      className={`main-layout ${state.player.isFullscreen ? 'main-layout--fullscreen' : ''}`} 
+      ref={layoutRef}
+    >
       <div className="main-layout__video-section">
         <VideoPlayer />
       </div>
-      {hasFiles && (
+      {hasFiles && !state.player.isFullscreen && (
         <>
           {isPlaylistVisible && (
             <>

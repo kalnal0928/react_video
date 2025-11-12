@@ -12,6 +12,20 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
+  /* 하드웨어 가속 활성화 */
+  transform: translateZ(0);
+  will-change: transform;
+  /* 고화질 렌더링 최적화 */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  /* 부드러운 스케일링 */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  perspective: 1000;
+  /* GPU 가속 */
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
 }
 
 .video-display-empty {

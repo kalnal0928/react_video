@@ -130,6 +130,15 @@
   gap: 8px;
 }
 
+.volume-percentage {
+  font-size: 13px;
+  font-family: monospace;
+  min-width: 40px;
+  text-align: right;
+  color: rgba(255, 255, 255, 0.9);
+  user-select: none;
+}
+
 .volume-slider {
   width: 80px;
   height: 4px;

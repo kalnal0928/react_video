@@ -15,6 +15,8 @@ const KeyboardShortcuts: React.FC<KeyboardShortcutsProps> = ({ isOpen, onClose }
     { key: 'ESC', description: '전체화면 해제' },
     { key: '→ (오른쪽 화살표)', description: '앞으로 건너뛰기' },
     { key: '← (왼쪽 화살표)', description: '뒤로 건너뛰기' },
+    { key: '↑ (위쪽 화살표)', description: '볼륨 증가' },
+    { key: '↓ (아래쪽 화살표)', description: '볼륨 감소' },
   ];
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -52,7 +54,7 @@ const KeyboardShortcuts: React.FC<KeyboardShortcutsProps> = ({ isOpen, onClose }
 
         <div className="shortcuts-modal__footer">
           <p className="shortcuts-modal__note">
-            * 건너뛰기 간격은 설정에서 변경할 수 있습니다 (1-60초)
+            * 건너뛰기 간격과 볼륨 조절 간격은 설정에서 변경할 수 있습니다
           </p>
         </div>
       </div>

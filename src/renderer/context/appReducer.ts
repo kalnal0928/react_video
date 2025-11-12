@@ -2,6 +2,7 @@ import { AppState, AppAction, Settings } from '../../types';
 
 export const DEFAULT_SETTINGS: Settings = {
   seekInterval: 5,
+  volumeStep: 5, // 5% 단위로 볼륨 조절
 };
 
 export const appReducer = (state: AppState, action: AppAction): AppState => {
@@ -220,6 +221,21 @@ export const appReducer = (state: AppState, action: AppAction): AppState => {
       if (key === 'seekInterval') {
         const numValue = Number(value);
         if (isNaN(numValue) || numValue < 1 || numValue > 60) {
+          return state; // Invalid value, don't update
+        }
+        return {
+          ...state,
+          settings: {
+            ...state.settings,
+            [key]: numValue,
+          },
+        };
+      }
+      
+      // Validate volumeStep range (1-20%)
+      if (key === 'volumeStep') {
+        const numValue = Number(value);
+        if (isNaN(numValue) || numValue < 1 || numValue > 20) {
           return state; // Invalid value, don't update
         }
         return {

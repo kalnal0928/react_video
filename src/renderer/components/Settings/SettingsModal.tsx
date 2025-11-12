@@ -14,12 +14,14 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const firstFocusableRef = useRef<HTMLInputElement>(null);
   const [seekIntervalInput, setSeekIntervalInput] = useState(state.settings.seekInterval.toString());
+  const [volumeStepInput, setVolumeStepInput] = useState(state.settings.volumeStep.toString());
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   // Update local input state when settings change
   useEffect(() => {
     setSeekIntervalInput(state.settings.seekInterval.toString());
-  }, [state.settings.seekInterval]);
+    setVolumeStepInput(state.settings.volumeStep.toString());
+  }, [state.settings.seekInterval, state.settings.volumeStep]);
 
   // Focus trap implementation
   useEffect(() => {
@@ -79,6 +81,34 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
     }
   };
 
+  // Handle volume step change
+  const handleVolumeStepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setVolumeStepInput(value);
+
+    const numValue = parseInt(value, 10);
+    if (!isNaN(numValue) && numValue >= 1 && numValue <= 20) {
+      dispatch({
+        type: 'UPDATE_SETTING',
+        payload: { key: 'volumeStep', value: numValue },
+      });
+    } else if (value !== '' && value !== '-') {
+      showError('볼륨 조절 간격은 1%에서 20% 사이여야 합니다');
+    }
+  };
+
+  // Handle volume step blur
+  const handleVolumeStepBlur = () => {
+    const numValue = parseInt(volumeStepInput, 10);
+    if (isNaN(numValue) || numValue < 1 || numValue > 20) {
+      // Reset to current valid value
+      setVolumeStepInput(state.settings.volumeStep.toString());
+      if (volumeStepInput !== '') {
+        showError('잘못된 값입니다. 볼륨 조절 간격은 1%에서 20% 사이여야 합니다');
+      }
+    }
+  };
+
   // Handle reset to defaults
   const handleResetClick = () => {
     setShowResetConfirm(true);
@@ -92,6 +122,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
 
   const handleResetCancel = () => {
     setShowResetConfirm(false);
+  };
+
+  // Handle save and close
+  const handleSaveAndClose = () => {
+    showSuccess('설정이 저장되었습니다');
+    onClose();
   };
 
   if (!isOpen) return null;
@@ -133,6 +169,26 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
               방향키를 사용할 때 건너뛸 초 단위 (1-60)
             </p>
           </div>
+
+          <div className="settings-modal__section">
+            <label htmlFor="volume-step" className="settings-modal__label">
+              볼륨 조절 간격 (%)
+            </label>
+            <input
+              id="volume-step"
+              type="number"
+              min="1"
+              max="20"
+              value={volumeStepInput}
+              onChange={handleVolumeStepChange}
+              onBlur={handleVolumeStepBlur}
+              className="settings-modal__input"
+              aria-describedby="volume-step-description"
+            />
+            <p id="volume-step-description" className="settings-modal__description">
+              위/아래 방향키로 볼륨을 조절할 때 변경되는 퍼센트 (1-20)
+            </p>
+          </div>
         </div>
 
         <div className="settings-modal__footer">
@@ -142,6 +198,20 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
           >
             기본값으로 재설정
           </button>
+          <div className="settings-modal__footer-right">
+            <button
+              className="settings-modal__button settings-modal__button--secondary"
+              onClick={onClose}
+            >
+              취소
+            </button>
+            <button
+              className="settings-modal__button settings-modal__button--primary"
+              onClick={handleSaveAndClose}
+            >
+              저장
+            </button>
+          </div>
         </div>
 
         {showResetConfirm && (

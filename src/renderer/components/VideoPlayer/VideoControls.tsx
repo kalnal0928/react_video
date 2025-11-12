@@ -135,6 +135,7 @@ const VideoControls: React.FC = () => {
               className="volume-slider"
               aria-label="볼륨 조절"
             />
+            <span className="volume-percentage">{Math.round(volume * 100)}%</span>
           </div>
 
           {/* 전체화면 버튼 */}

@@ -16,7 +16,7 @@ const App: React.FC = () => {
 
   return (
     <div className="app">
-      <MenuBar />
+      {!state.player.isFullscreen && <MenuBar />}
       {hasFiles ? <MainLayout /> : <EmptyState />}
       <ToastContainer toasts={state.toasts} onRemove={handleRemoveToast} />
     </div>

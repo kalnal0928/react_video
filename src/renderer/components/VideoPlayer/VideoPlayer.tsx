@@ -9,7 +9,7 @@ const VideoPlayer: React.FC = () => {
   const { state, dispatch } = useAppContext();
   const { showError } = useToast();
   const { isPlaying, currentTime } = state.player;
-  const { seekInterval } = state.settings;
+  const { seekInterval, volumeStep } = state.settings;
 
   // 키보드 단축키 구현
   useEffect(() => {
@@ -43,6 +43,18 @@ const VideoPlayer: React.FC = () => {
           // 왼쪽 화살표로 설정된 간격만큼 뒤로
           e.preventDefault();
           dispatch({ type: 'SET_TIME', payload: Math.max(0, currentTime - seekInterval) });
+          break;
+
+        case 'ArrowUp':
+          // 위쪽 화살표로 볼륨 증가 (설정된 간격)
+          e.preventDefault();
+          dispatch({ type: 'SET_VOLUME', payload: Math.min(1, state.player.volume + volumeStep / 100) });
+          break;
+
+        case 'ArrowDown':
+          // 아래쪽 화살표로 볼륨 감소 (설정된 간격)
+          e.preventDefault();
+          dispatch({ type: 'SET_VOLUME', payload: Math.max(0, state.player.volume - volumeStep / 100) });
           break;
 
         case 'f':
@@ -82,7 +94,7 @@ const VideoPlayer: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [isPlaying, currentTime, seekInterval, state.player.isFullscreen, dispatch, showError]);
+  }, [isPlaying, currentTime, seekInterval, volumeStep, state.player.isFullscreen, state.player.volume, dispatch, showError]);
 
   return (
     <div className="video-player">
