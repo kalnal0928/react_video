@@ -25,9 +25,8 @@ const EmptyState: React.FC = () => {
     try {
       const files = await window.electronAPI.openFolderDialog();
       if (files && files.length > 0) {
-        dispatch({ type: 'SET_PLAYLIST', payload: files });
-        dispatch({ type: 'SET_CURRENT_FILE', payload: 0 });
-        showSuccess(`${files.length}개의 비디오 파일을 찾았습니다.`);
+        dispatch({ type: 'SET_PLAYLIST', payload: files, autoPlay: false });
+        showSuccess(`${files.length}개의 비디오 파일이 재생 목록에 추가되었습니다.`);
       } else if (files && files.length === 0) {
         showWarning('선택한 폴더에 비디오 파일이 없습니다.');
       }

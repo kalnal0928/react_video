@@ -8,6 +8,22 @@ const __dirname = path.dirname(__filename);
 
 let mainWindow: BrowserWindow | null = null;
 
+// Single instance lock - 하나의 인스턴스만 실행
+const gotTheLock = app.requestSingleInstanceLock();
+
+if (!gotTheLock) {
+  console.log('Another instance is already running. Quitting...');
+  app.quit();
+} else {
+  app.on('second-instance', () => {
+    // 두 번째 인스턴스 실행 시 기존 창 포커스
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
+  });
+}
+
 // 하드웨어 가속 활성화 (4K 비디오 재생 최적화)
 app.commandLine.appendSwitch('enable-features', 'VaapiVideoDecoder');
 app.commandLine.appendSwitch('ignore-gpu-blocklist');
@@ -15,13 +31,18 @@ app.commandLine.appendSwitch('enable-gpu-rasterization');
 app.commandLine.appendSwitch('enable-zero-copy');
 
 function createWindow() {
+  // 기존 창이 있으면 생성하지 않음
+  if (mainWindow) {
+    return;
+  }
+
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
     minWidth: 800,
     minHeight: 600,
-    backgroundColor: '#000000',
-    show: false,
+    backgroundColor: '#1a1a1a',
+    show: false, // ready-to-show 이벤트에서 표시
     webPreferences: {
       preload: process.env.VITE_DEV_SERVER_URL 
         ? path.join(process.cwd(), 'src/main/preload.cjs')
@@ -56,18 +77,30 @@ function createWindow() {
     });
   }
 
-  if (process.env.VITE_DEV_SERVER_URL) {
-    mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL);
-    // 개발자 도구는 필요할 때만 F12로 열 수 있습니다
-    // mainWindow.webContents.openDevTools();
-  } else {
-    mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
-  }
-
   // Show window when ready to prevent visual flash
   mainWindow.once('ready-to-show', () => {
-    mainWindow?.show();
+    console.log('Window ready to show');
+    if (mainWindow) {
+      mainWindow.show();
+      mainWindow.focus();
+    }
   });
+
+  // 로딩 실패 시 에러 로그
+  mainWindow.webContents.on('did-fail-load', (_event, errorCode, errorDescription) => {
+    console.error('Failed to load:', errorCode, errorDescription);
+  });
+
+  if (process.env.VITE_DEV_SERVER_URL) {
+    console.log('Loading dev server:', process.env.VITE_DEV_SERVER_URL);
+    mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL);
+    // 개발자 도구 열기 (디버깅용)
+    mainWindow.webContents.openDevTools();
+  } else {
+    const indexPath = path.join(__dirname, '../dist/index.html');
+    console.log('Loading production build:', indexPath);
+    mainWindow.loadFile(indexPath);
+  }
 
   mainWindow.on('closed', () => {
     mainWindow = null;

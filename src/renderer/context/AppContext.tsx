@@ -15,12 +15,21 @@ const getInitialSettings = (): Settings => {
     const stored = localStorage.getItem(SETTINGS_STORAGE_KEY);
     if (stored) {
       const parsed = JSON.parse(stored);
-      // Validate the loaded settings
-      if (typeof parsed.seekInterval === 'number' && 
+      // Validate and merge with defaults to ensure all fields exist
+      return {
+        seekInterval: 
+          typeof parsed.seekInterval === 'number' && 
           parsed.seekInterval >= 1 && 
-          parsed.seekInterval <= 60) {
-        return parsed;
-      }
+          parsed.seekInterval <= 60
+            ? parsed.seekInterval
+            : DEFAULT_SETTINGS.seekInterval,
+        volumeStep:
+          typeof parsed.volumeStep === 'number' &&
+          parsed.volumeStep >= 1 &&
+          parsed.volumeStep <= 20
+            ? parsed.volumeStep
+            : DEFAULT_SETTINGS.volumeStep,
+      };
     }
   } catch (error) {
     console.error('Failed to load settings from localStorage:', error);

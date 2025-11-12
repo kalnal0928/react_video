@@ -6,13 +6,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "clean": "node -e \"const fs = require('fs'); const path = require('path'); const dir = path.join(__dirname, 'release'); if (fs.existsSync(dir)) { fs.rmSync(dir, { recursive: true, force: true }); console.log('release 폴더가 삭제되었습니다.'); }\"",
+    "prebuild": "npm run clean",
     "build": "tsc && vite build && electron-builder --win --x64",
     "preview": "vite preview",
     "electron:dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",
     "electron:build": "tsc && vite build && electron-builder"
   },
   "keywords": ["electron", "react", "typescript", "video-player"],
-  "author": "",
+  "author": "코드깎는 국어쌤",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.10.0",
@@ -36,15 +38,21 @@
     "appId": "com.videoplayer.app",
     "productName": "Video Player",
     "directories": {
-      "output": "release"
+      "output": "release",
+      "buildResources": "build"
     },
     "files": [
       "dist/**/*",
       "dist-electron/**/*"
     ],
     "win": {
-      "target": ["portable"],
-      "signingHashAlgorithms": []
+      "target": [
+        {
+          "target": "zip",
+          "arch": ["x64"]
+        }
+      ],
+      "sign": null
     },
     "mac": {
       "target": ["dmg"]

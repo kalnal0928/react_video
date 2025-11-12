@@ -38,7 +38,7 @@ export interface AppState {
 }
 
 export type AppAction =
-  | { type: 'SET_PLAYLIST'; payload: VideoFile[] }
+  | { type: 'SET_PLAYLIST'; payload: VideoFile[]; autoPlay?: boolean }
   | { type: 'ADD_TO_PLAYLIST'; payload: VideoFile }
   | { type: 'SET_CURRENT_FILE'; payload: number }
   | { type: 'PLAY' }

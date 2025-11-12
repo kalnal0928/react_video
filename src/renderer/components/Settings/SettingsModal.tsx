@@ -13,15 +13,17 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
   const { showError, showSuccess } = useToast();
   const modalRef = useRef<HTMLDivElement>(null);
   const firstFocusableRef = useRef<HTMLInputElement>(null);
-  const [seekIntervalInput, setSeekIntervalInput] = useState(state.settings.seekInterval.toString());
-  const [volumeStepInput, setVolumeStepInput] = useState(state.settings.volumeStep.toString());
+  const [seekIntervalInput, setSeekIntervalInput] = useState((state.settings?.seekInterval ?? 5).toString());
+  const [volumeStepInput, setVolumeStepInput] = useState((state.settings?.volumeStep ?? 5).toString());
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   // Update local input state when settings change
   useEffect(() => {
-    setSeekIntervalInput(state.settings.seekInterval.toString());
-    setVolumeStepInput(state.settings.volumeStep.toString());
-  }, [state.settings.seekInterval, state.settings.volumeStep]);
+    if (state.settings) {
+      setSeekIntervalInput((state.settings.seekInterval ?? 5).toString());
+      setVolumeStepInput((state.settings.volumeStep ?? 5).toString());
+    }
+  }, [state.settings]);
 
   // Focus trap implementation
   useEffect(() => {
@@ -74,7 +76,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
     const numValue = parseInt(seekIntervalInput, 10);
     if (isNaN(numValue) || numValue < 1 || numValue > 60) {
       // Reset to current valid value
-      setSeekIntervalInput(state.settings.seekInterval.toString());
+      setSeekIntervalInput((state.settings?.seekInterval ?? 5).toString());
       if (seekIntervalInput !== '') {
         showError('잘못된 값입니다. 탐색 간격은 1초에서 60초 사이여야 합니다');
       }
@@ -102,7 +104,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
     const numValue = parseInt(volumeStepInput, 10);
     if (isNaN(numValue) || numValue < 1 || numValue > 20) {
       // Reset to current valid value
-      setVolumeStepInput(state.settings.volumeStep.toString());
+      setVolumeStepInput((state.settings?.volumeStep ?? 5).toString());
       if (volumeStepInput !== '') {
         showError('잘못된 값입니다. 볼륨 조절 간격은 1%에서 20% 사이여야 합니다');
       }

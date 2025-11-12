@@ -8,6 +8,7 @@ export const DEFAULT_SETTINGS: Settings = {
 export const appReducer = (state: AppState, action: AppAction): AppState => {
   switch (action.type) {
     case 'SET_PLAYLIST':
+      const shouldAutoPlay = action.autoPlay !== false; // 기본값은 true
       return {
         ...state,
         playlist: {
@@ -17,7 +18,7 @@ export const appReducer = (state: AppState, action: AppAction): AppState => {
         },
         player: {
           ...state.player,
-          isPlaying: action.payload.length > 0,
+          isPlaying: shouldAutoPlay && action.payload.length > 0,
           currentTime: 0,
           duration: 0,
         },
