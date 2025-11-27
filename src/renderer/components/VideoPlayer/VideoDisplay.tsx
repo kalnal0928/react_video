@@ -13,7 +13,7 @@ const VideoDisplay: React.FC = () => {
   const { isPlaying, volume, currentTime } = state.player;
   const [isLoading, setIsLoading] = useState(false);
   const [isChangingFile, setIsChangingFile] = useState(false);
-  const [codecError, setCodecError] = useState<{ fileName: string; filePath: string; codecInfo: string } | null>(null);
+  const [codecError, setCodecError] = useState<{ fileName: string; codecInfo: string } | null>(null);
 
   // 파일 확장자로 필요한 코덱 정보 가져오기
   const getCodecInfo = (filename: string): string => {
@@ -165,13 +165,13 @@ const VideoDisplay: React.FC = () => {
         case MediaError.MEDIA_ERR_DECODE:
           const codecInfo = getCodecInfo(currentFile.name);
           errorMessage = `비디오를 디코딩할 수 없습니다. 외부 플레이어 사용을 권장합니다.`;
-          setCodecError({ fileName: currentFile.name, filePath: currentFile.path, codecInfo });
+          setCodecError({ fileName: currentFile.name, codecInfo });
           shouldSkip = true;
           break;
         case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
           const requiredCodec = getCodecInfo(currentFile.name);
           errorMessage = `지원하지 않는 포맷입니다. 외부 플레이어 사용을 권장합니다.`;
-          setCodecError({ fileName: currentFile.name, filePath: currentFile.path, codecInfo: requiredCodec });
+          setCodecError({ fileName: currentFile.name, codecInfo: requiredCodec });
           shouldSkip = true;
           break;
       }
@@ -228,7 +228,6 @@ const VideoDisplay: React.FC = () => {
         isOpen={codecError !== null}
         onClose={() => setCodecError(null)}
         fileName={codecError?.fileName || ''}
-        filePath={codecError?.filePath || ''}
         codecInfo={codecError?.codecInfo || ''}
       />
     </div>

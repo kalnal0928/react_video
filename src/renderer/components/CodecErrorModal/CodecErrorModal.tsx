@@ -5,11 +5,10 @@ interface CodecErrorModalProps {
   isOpen: boolean;
   onClose: () => void;
   fileName: string;
-  filePath: string;
   codecInfo: string;
 }
 
-const CodecErrorModal: React.FC<CodecErrorModalProps> = ({ isOpen, onClose, fileName, filePath, codecInfo }) => {
+const CodecErrorModal: React.FC<CodecErrorModalProps> = ({ isOpen, onClose, fileName, codecInfo }) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
