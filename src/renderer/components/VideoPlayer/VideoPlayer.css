@@ -16,15 +16,11 @@
   }
 }
 
-.video-player:hover .video-controls {
-  opacity: 1;
-}
-
-/* 마우스 커서 숨김 (비디오 재생 중) */
-.video-player.playing:not(:hover) {
+/* 마우스 커서 숨김 (컨트롤이 숨겨졌을 때) */
+.video-player.hide-cursor {
   cursor: none;
 }
 
-.video-player.playing:not(:hover) .video-element {
-  cursor: none;
+.video-player.hide-cursor * {
+  cursor: none !important;
 }

@@ -3,7 +3,11 @@ import { useAppContext } from '../../context/AppContext';
 import { useToast } from '../../hooks/useToast';
 import './VideoControls.css';
 
-const VideoControls: React.FC = () => {
+interface VideoControlsProps {
+  isVisible: boolean;
+}
+
+const VideoControls: React.FC<VideoControlsProps> = ({ isVisible }) => {
   const { state, dispatch } = useAppContext();
   const { showError } = useToast();
   const { isPlaying, currentTime, duration, volume, isFullscreen } = state.player;
@@ -63,7 +67,7 @@ const VideoControls: React.FC = () => {
   }
 
   return (
-    <div className="video-controls">
+    <div className={`video-controls ${isVisible ? 'visible' : 'hidden'}`}>
       {/* 프로그레스 바 */}
       <div
         ref={progressBarRef}
